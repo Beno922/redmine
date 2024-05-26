@@ -1,15 +1,27 @@
 package com.ynpr5d.redmine.controller;
 
+import com.ynpr5d.redmine.entity.Project;
+import com.ynpr5d.redmine.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @Tag(name = "Project Management System", description = "The Project Management APIs")
 public class ProjectController {
+
+    private final ProjectService projectService;
+
+    @Autowired
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @Operation(summary = "Welcome message for the home API")
     @GetMapping("/")
@@ -20,9 +32,9 @@ public class ProjectController {
 
     @Operation(summary = "Get all projects")
     @GetMapping("/api/projects")
-    public String listProjects(@RequestParam(name="name", required=false, defaultValue="Project") String name, Model model) {
-        model.addAttribute("name", name);
-        return "projects";  // Returns the projects.html template
+    @ResponseBody
+    public List<Project> listProjects() {
+        return projectService.getAllProjects();
     }
 
     @Operation(summary = "Get a project by ID")
