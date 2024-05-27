@@ -1,26 +1,31 @@
 package com.ynpr5d.redmine.controller;
 
 import com.ynpr5d.redmine.entity.Project;
+import com.ynpr5d.redmine.entity.Task;
 import com.ynpr5d.redmine.service.ProjectService;
+import com.ynpr5d.redmine.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Tag(name = "Project Management System", description = "The Project Management APIs")
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final TaskService taskService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, TaskService taskService) {
         this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     @Operation(summary = "Welcome message for the home API")
@@ -37,20 +42,21 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @Operation(summary = "Get a project by ID")
+     @Operation(summary = "Get a project by ID")
     @GetMapping("/api/projects/{projectId}")
     @ResponseBody
-    public String getProjectById(
+    public ResponseEntity<Project> getProjectById(
             @Parameter(description = "ID of the project to be retrieved", required = true)
             @PathVariable Integer projectId) {
-        return "Project details for project ID: " + projectId; // Placeholder text
+        Optional<Project> project = projectService.getProjectById(projectId);
+        return project.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Get all tasks")
     @GetMapping("/api/tasks")
-    public String listTasks(@RequestParam(name="name", required=false, defaultValue="Task") String name, Model model) {
-        model.addAttribute("name", name);
-        return "tasks";  // Returns the tasks.html template
+    @ResponseBody
+    public List<Task> listTasks(){
+        return taskService.getAllTasks();
     }
 
     @Operation(summary = "Add a task to a project")
