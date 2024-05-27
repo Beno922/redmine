@@ -29,7 +29,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Welcome message for the home API")
-    @GetMapping("/")
+    @GetMapping("/api/home")
     @ResponseBody
     public String home() {
         return "Welcome to the home API";

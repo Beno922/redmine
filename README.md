@@ -22,3 +22,10 @@ Ezután futtatható az alkalmazás.
 - Adatbázisszerverrel összekötve, adatok a konfigurációs fájlban.
 - Lekérdezések működnek.
 
+
+## 3. mérfőldkő:
+FOLYAMATBAN
+
+## 4. mérföldkő:
+- Websocket beállítva, főoldalon (http://localhost:8080/) tesztelhető.
+- A böngésző konzoljában és az alkalmazás naplójában láthatóak a teszteredmények.
