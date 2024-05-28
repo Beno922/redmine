@@ -59,13 +59,24 @@ public class ProjectController {
         return taskService.getAllTasks();
     }
 
-    @Operation(summary = "Add a task to a project")
-    @PostMapping("/api/projects/{projectId}/tasks")
-    @ResponseBody
-    public String addTaskToProject(
-            @Parameter(description = "ID of the project to add the task to", required = true)
-            @PathVariable Integer projectId,
-            @RequestBody String task) {
-        return "Task added to project ID: " + projectId; // Placeholder text
+@PostMapping("/api/projects/{projectId}/tasks")
+@ResponseBody
+public ResponseEntity<String> addTaskToProject(
+        @Parameter(description = "ID of the project to add the task to", required = true)
+        @PathVariable Integer projectId,
+        @RequestBody Task task) {
+
+    Optional<Project> project = projectService.getProjectById(projectId);
+    if (project.isEmpty()) {
+        return ResponseEntity.notFound().build();
     }
+
+
+    task.setId(0);
+
+    task.setProject(project.get());
+    taskService.saveTask(task);
+
+    return ResponseEntity.ok("Task added to project ID: " + projectId);
+}
 }
