@@ -17,20 +17,13 @@ public class Task {
 
     private String name;
     private String description;
-
-    @Column(name = "project_id")
-    private Integer projectId;
-
-    @Column(name = "user_id")
-    private Integer userId;
-
     private LocalDateTime deadline;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private Manager manager;
 }
